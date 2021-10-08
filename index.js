@@ -19,13 +19,13 @@ app.get('/', async (req, res) => {
 
   const request = {
     spreadsheetId,
-    range: 'A1:B1',
+    range: 'A1:D2',
   }
 
   try {
     const response = (await googleSheets.spreadsheets.values.get(request)).data;
     console.log(JSON.stringify(response, null, 2));
-    res.send(response)
+    res.send(response.values);
   } catch (err) {
     console.error(err);
   }
