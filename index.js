@@ -17,12 +17,19 @@ app.get('/', async (req, res) => {
 
   const spreadsheetId = '1VJFDkHGq8O8aJpdAZFOwwhhLBUycvdn59jAYbTnoUNA';
 
-  const metaData  = await googleSheets.spreadsheets.get({
-    auth,
+  const request = {
     spreadsheetId,
-  })
+    range: 'A1:D2',
+  }
 
-  res.send(metaData)
+  try {
+    const response = (await googleSheets.spreadsheets.values.get(request)).data;
+    console.log(JSON.stringify(response, null, 2));
+    res.send(response.values);
+  } catch (err) {
+    console.error(err);
+  }
+
 })
 
 app.listen(3600, (req, res) => console.log("running on 3600"))
