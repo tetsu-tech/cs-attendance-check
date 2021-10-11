@@ -50,6 +50,7 @@ app.get('/create', async (req, res) => {
         {
           "addSheet": {
             "properties": {
+              // 毎月のシートを発行
               "title": "test2"
             }
           }
