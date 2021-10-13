@@ -44,7 +44,7 @@ app.get('/create', async (req, res) => {
   const spreadsheetId = '1VJFDkHGq8O8aJpdAZFOwwhhLBUycvdn59jAYbTnoUNA';
   
   let today = new Date();
-  today.setTime(today.getTime() + 1000*60*60*9);// JSTに変換
+  today.setTime(today.getTime() + 1000*60*60*9); // JSTに変換
 
   let nextMonth =  new Date(today.getFullYear(), today.getMonth() + 1, 1);
   nextMonth.setTime(nextMonth.getTime() + 1000*60*60*9)
@@ -61,7 +61,6 @@ app.get('/create', async (req, res) => {
         {
           "addSheet": {
             "properties": {
-              // 毎月のシートを発行 名前を動的に変更したい
               "title": `${titleDate[3]}/${titleDate[1]}`
             }
           }
