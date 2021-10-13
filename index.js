@@ -49,6 +49,11 @@ app.get('/create', async (req, res) => {
   let nextMonth =  new Date(today.getFullYear(), today.getMonth() + 1, 1);
   nextMonth.setTime(nextMonth.getTime() + 1000*60*60*9)
 
+  const nextMonthToString = nextMonth.toDateString();
+
+  const titleDate = nextMonthToString.split(" ");
+  console.log(titleDate);
+
   const request_body = {
     spreadsheetId,
     resource: {
@@ -56,8 +61,8 @@ app.get('/create', async (req, res) => {
         {
           "addSheet": {
             "properties": {
-              // 毎月のシートを発行
-              "title": "yy/mm/2"
+              // 毎月のシートを発行 名前を動的に変更したい
+              "title": `${titleDate[3]}/${titleDate[1]}`
             }
           }
         }
@@ -66,9 +71,7 @@ app.get('/create', async (req, res) => {
   }
 
   // ここを分岐させる
-  if (today === nextMonth) {
-    res.send("Yeaaaaaaa!!!!")
-  } else {
+  if (today.getTime() === nextMonth.getTime()) {
     try {
       const response = (await googleSheets.spreadsheets.batchUpdate(request_body)).data;
   
@@ -77,6 +80,17 @@ app.get('/create', async (req, res) => {
     } catch (error) {
       console.error(error);
     }
+  } else {
+    // テスト用
+    // try {
+    //   const response = (await googleSheets.spreadsheets.batchUpdate(request_body)).data;
+  
+    //   console.log(JSON.stringify(response, null, 2));
+    //   res.send("Yeaaaaaaa!!!!")
+    // } catch (error) {
+    //   console.error(error);
+    // }
+    res.send("Yeaaaaaaa!!!!")
   }
 })
 
