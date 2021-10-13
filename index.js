@@ -42,6 +42,17 @@ app.get('/create', async (req, res) => {
   const googleSheets = google.sheets({version: 'v4', auth: client });
 
   const spreadsheetId = '1VJFDkHGq8O8aJpdAZFOwwhhLBUycvdn59jAYbTnoUNA';
+  
+  let today = new Date();
+  today.setTime(today.getTime() + 1000*60*60*9); // JSTに変換
+
+  let nextMonth =  new Date(today.getFullYear(), today.getMonth() + 1, 1);
+  nextMonth.setTime(nextMonth.getTime() + 1000*60*60*9)
+
+  const nextMonthToString = nextMonth.toDateString();
+
+  const titleDate = nextMonthToString.split(" ");
+  console.log(titleDate);
 
   const request_body = {
     spreadsheetId,
@@ -50,8 +61,7 @@ app.get('/create', async (req, res) => {
         {
           "addSheet": {
             "properties": {
-              // 毎月のシートを発行
-              "title": "yy/mm/1"
+              "title": `${titleDate[3]}/${titleDate[1]}`
             }
           }
         }
@@ -59,28 +69,27 @@ app.get('/create', async (req, res) => {
     }
   }
 
-  try {
-    const response = (await googleSheets.spreadsheets.batchUpdate(request_body)).data;
-
-    console.log(JSON.stringify(response, null, 2));
-    res.send(response.values);
-  } catch (error) {
-    console.error(error);
+  if (today.getTime() === nextMonth.getTime()) {
+    try {
+      const response = (await googleSheets.spreadsheets.batchUpdate(request_body)).data;
+  
+      console.log(JSON.stringify(response, null, 2));
+      res.send(response.values);
+    } catch (error) {
+      console.error(error);
+    }
+  } else {
+    // テスト用
+    // try {
+    //   const response = (await googleSheets.spreadsheets.batchUpdate(request_body)).data;
+  
+    //   console.log(JSON.stringify(response, null, 2));
+    //   res.send("Yeaaaaaaa!!!!")
+    // } catch (error) {
+    //   console.error(error);
+    // }
+    res.send("Yeaaaaaaa!!!!")
   }
 })
-
-// barchUpdate使えば新しいシート作成できる
-// https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/batchUpdate?apix_params=%7B%22spreadsheetId%22%3A%221VJFDkHGq8O8aJpdAZFOwwhhLBUycvdn59jAYbTnoUNA%22%2C%22resource%22%3A%7B%22requests%22%3A%5B%7B%22addSheet%22%3A%7B%22properties%22%3A%7B%22title%22%3A%22test%22%7D%7D%7D%5D%7D%7D
-//{
-//   "requests": [
-//     {
-//       "addSheet": {
-//         "properties": {
-//           "title": "test"
-//         }
-//       }
-//     }
-//   ]
-// }
 
 app.listen(3600, (req, res) => console.log("running on 3600"))
