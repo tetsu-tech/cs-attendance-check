@@ -69,7 +69,6 @@ app.get('/create', async (req, res) => {
     }
   }
 
-  // ここを分岐させる
   if (today.getTime() === nextMonth.getTime()) {
     try {
       const response = (await googleSheets.spreadsheets.batchUpdate(request_body)).data;
